@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
 import { Product, PriceEntry, platformMeta } from "@/data/products";
 import { PlatformBadge } from "./PlatformBadge";
-import { TrendingDown, Clock, ExternalLink } from "lucide-react";
+import { TrendingDown, Clock, ExternalLink, ShoppingCart } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const getBestPrice = (prices: PriceEntry[]) => {
   const inStock = prices.filter((p) => p.inStock);
@@ -16,6 +19,13 @@ const getSavingsPercent = (entry: PriceEntry) => {
 
 export const ProductCard = ({ product }: { product: Product }) => {
   const best = getBestPrice(product.prices);
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    toast({ title: "Added to cart", description: `${product.name} added to your cart.` });
+  };
 
   return (
     <motion.div
@@ -69,7 +79,14 @@ export const ProductCard = ({ product }: { product: Product }) => {
                     : "bg-secondary/50"
                 } ${!entry.inStock ? "opacity-50" : ""}`}
               >
-                <PlatformBadge platform={entry.platform} />
+                <a
+                  href={entry.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-80 transition-opacity"
+                >
+                  <PlatformBadge platform={entry.platform} />
+                </a>
 
                 <div className="flex items-center gap-2">
                   {entry.inStock ? (
@@ -93,6 +110,15 @@ export const ProductCard = ({ product }: { product: Product }) => {
                         <Clock className="h-2.5 w-2.5" />
                         {entry.deliveryTime}
                       </div>
+                      <a
+                        href={entry.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-accent hover:text-accent/80 transition-colors"
+                        title={`Buy on ${platformMeta[entry.platform].label}`}
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
                     </>
                   ) : (
                     <span className="text-xs text-muted-foreground italic">
@@ -104,6 +130,12 @@ export const ProductCard = ({ product }: { product: Product }) => {
             );
           })}
         </div>
+
+        {/* Add to Cart */}
+        <Button onClick={handleAddToCart} className="w-full gap-2" size="sm">
+          <ShoppingCart className="h-4 w-4" />
+          Add to Cart
+        </Button>
       </div>
     </motion.div>
   );
