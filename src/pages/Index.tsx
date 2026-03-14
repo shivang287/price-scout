@@ -1,13 +1,18 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { HeroSection } from "@/components/HeroSection";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { ProductCard } from "@/components/ProductCard";
 import { products } from "@/data/products";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, User } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const { totalItems } = useCart();
+  const navigate = useNavigate();
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
@@ -32,9 +37,21 @@ const Index = () => {
               Price<span className="text-accent">Peek</span>
             </span>
           </div>
-          <span className="text-xs text-muted-foreground hidden sm:block">
-            Compare. Choose. Save.
-          </span>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={() => navigate("/cart")} className="relative gap-1.5">
+              <ShoppingCart className="h-4 w-4" />
+              <span className="hidden sm:inline">Cart</span>
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-accent text-accent-foreground text-[10px] font-bold flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => navigate("/auth")} className="gap-1.5">
+              <User className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign In</span>
+            </Button>
+          </div>
         </div>
       </nav>
 
