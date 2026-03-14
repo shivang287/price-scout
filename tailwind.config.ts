@@ -13,6 +13,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Space Grotesk', 'system-ui', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -47,6 +50,13 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        deal: {
+          DEFAULT: "hsl(var(--deal))",
+          foreground: "hsl(var(--deal-foreground))",
+        },
+        blinkit: "hsl(var(--blinkit))",
+        amazon: "hsl(var(--amazon))",
+        flipkart: "hsl(var(--flipkart))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
